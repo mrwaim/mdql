@@ -23,6 +23,18 @@ FROM "samples/tasks.md"
 WHERE Priority = 'High'
 ORDER BY DueDate ASC;
 
+-- Query incomplete todos by priority
+SELECT
+  t.text as task,
+  t.section,
+  m.priority,
+  m.status
+FROM "samples/notes-app/todo.md"::task_lists t
+JOIN "samples/notes-app/todo.md"::section_metadata m
+  ON t.section = m.section_name
+WHERE t.completed = false
+  AND m.priority = 'High';
+
 -- Get all engineering employees with their tasks
 SELECT
   e.content->>'Employee ID' as emp_id,
@@ -39,6 +51,7 @@ WHERE e.content->>'Department' = 'Engineering';
 ### Core Documentation
 
 - **[Query Language Reference](docs/queries.md)** - Complete guide to SELECT, INSERT, UPDATE, DELETE queries with examples
+- **[Task Lists Specification](docs/task-lists.md)** - Working with checkbox/task lists for todo management
 - **[Metadata Specification](docs/metadata-spec.md)** - How MDQL tracks and references row data
 - **[Joins Reference](docs/joins.md)** - Comprehensive guide to joining markdown data sources
 
@@ -51,6 +64,9 @@ The `samples/` directory contains example markdown files demonstrating different
 - `samples/projects.md` - List items as rows
 - `samples/notes.md` - Paragraphs as rows
 - `samples/departments.md` - List items with structured data
+- `samples/notes-app/` - Todo management system with task lists
+  - `todo.md` - Task lists with checkboxes, nested tasks, and section metadata
+  - `example-queries.md` - Comprehensive query examples for todo management
 
 ## Features
 
@@ -220,6 +236,14 @@ See [Joins Reference](docs/joins.md) for comprehensive join documentation.
 - Track sprint progress and burndown
 - Generate reports on overdue items
 - Analyze workload distribution
+
+### Todo Management
+
+- Query tasks by completion status, priority, section
+- Track nested task hierarchies and dependencies
+- Generate daily/weekly todo reports
+- Monitor task progress and completion rates
+- Archive completed tasks automatically
 
 ### Knowledge Management
 
