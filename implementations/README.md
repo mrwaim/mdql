@@ -7,7 +7,8 @@ This directory contains implementations of the MDQL (Markdown Query Language) sp
 ```
 implementations/
 ├── prototypes/          # Proof-of-concept implementations
-│   └── python-mdql/     # Python prototype implementation
+│   ├── python-mdql/     # Python prototype implementation
+│   └── swift-mdql/      # Swift prototype implementation (WIP)
 └── README.md           # This file
 ```
 
@@ -48,10 +49,48 @@ mdql.add_task(section="My Section", text="New task")
 mdql.save()
 ```
 
+### Swift MDQL (`prototypes/swift-mdql/`)
+
+⚠️ **Work in Progress** - A Swift implementation with type-safe parsing and querying:
+
+- ✅ Parse task lists with checkboxes
+- ✅ Extract section metadata
+- ✅ Query tasks by multiple criteria
+- ✅ Support for nested tasks and notes
+- ✅ Generate progress summaries
+- ✅ Type-safe Swift implementation
+- ⚠️ Runtime debugging needed
+
+**Build:**
+
+```bash
+cd prototypes/swift-mdql
+swift build
+```
+
+See [prototypes/swift-mdql/README.md](prototypes/swift-mdql/README.md) for detailed documentation.
+
+**Example Usage:**
+
+```swift
+import MDQL
+
+// Load and query
+let mdql = try MDQL(filepath: "todo.md")
+let highPriority = mdql.query(completed: false, priority: "High")
+
+// Get section summary
+let summary = mdql.getSectionSummary()
+for item in summary {
+    print("\(item.section): \(item.completed)/\(item.totalTasks)")
+}
+```
+
 ## Future Implementations
 
 Potential future implementations:
 
+- **Swift MDQL (Complete)** - Finish debugging and add write operations
 - **TypeScript/JavaScript** - For browser and Node.js environments
 - **Rust** - High-performance implementation with CLI
 - **Go** - Standalone binary with built-in server
