@@ -88,6 +88,39 @@ WHERE section = 'Active Projects'
 | Cloud Migration | In Progress | E002 |
 | API Gateway | In Progress | E001 |
 
+### SELECT from Task Lists (Checkboxes)
+
+```sql
+-- Select all incomplete tasks
+SELECT text, section, completed
+FROM "samples/notes-app/todo.md"::task_lists
+WHERE completed = false;
+
+-- Select tasks by section
+SELECT text, completed
+FROM "samples/notes-app/todo.md"::task_lists
+WHERE section = 'Open Mosque Project';
+
+-- Select with section metadata
+SELECT
+  t.text,
+  t.section,
+  m.priority,
+  m.status
+FROM "samples/notes-app/todo.md"::task_lists t
+JOIN "samples/notes-app/todo.md"::section_metadata m
+  ON t.section = m.section_name
+WHERE t.completed = false
+  AND m.priority = 'High'
+  AND t.indent_level = 0;
+```
+
+**Result:**
+| text | section | priority | status |
+|------|---------|----------|--------|
+| Get kids camera to initial better version | Kids Camera with Aafiyah | High | In Progress |
+| Get pacemaker to a good spot | Pacemaker Development | High | In Progress |
+
 ### SELECT from Paragraphs
 
 ```sql
@@ -269,6 +302,27 @@ WHERE section = 'Active Projects';
 
 **Effect:** Updates list items matching the criteria
 
+### UPDATE Task Lists
+
+```sql
+-- Mark a task as complete
+UPDATE "samples/notes-app/todo.md"::task_lists
+SET completed = true
+WHERE line_number = 55;
+
+-- Mark all tasks in a section as complete
+UPDATE "samples/notes-app/todo.md"::task_lists
+SET completed = true
+WHERE section = 'Dad Interview';
+
+-- Update task text
+UPDATE "samples/notes-app/todo.md"::task_lists
+SET text = 'Schedule time with dad for interview (using otter.ai)'
+WHERE line_number = 175;
+```
+
+**Effect:** Changes `- [ ]` to `- [x]` or updates task text
+
 ### UPDATE Paragraphs
 
 ```sql
@@ -337,6 +391,24 @@ WHERE content LIKE '%Mobile App Redesign%';
 ```
 
 **Effect:** Removes list items from projects.md
+
+### DELETE Task Lists
+
+```sql
+-- Delete completed tasks
+DELETE FROM "samples/notes-app/todo.md"::task_lists
+WHERE completed = true;
+
+-- Delete tasks from a specific section
+DELETE FROM "samples/notes-app/todo.md"::task_lists
+WHERE section = 'Completed Projects';
+
+-- Delete specific task by line number
+DELETE FROM "samples/notes-app/todo.md"::task_lists
+WHERE line_number = 176;
+```
+
+**Effect:** Removes task items from the todo list
 
 ### DELETE Paragraphs
 
