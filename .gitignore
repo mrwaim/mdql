@@ -183,3 +183,6 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# Confidential — real personal todo, never commit
+samples/notes-app/todo.md
