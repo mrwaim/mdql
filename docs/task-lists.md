@@ -249,7 +249,34 @@ Each task list item has the following metadata:
 | `updated_time` | time | Optional time from updated |
 | `priority` | string | From `**Priority:** value` |
 | `status` | string | From `**Status:** value` |
+| `effort` | string | From `**Effort:** Quick\|Focus` — default for the section's own tasks |
 | `properties` | object | All `**Key:** value` pairs |
+
+### Task Effort (added 2026-09-22)
+
+A task can carry an inline effort tag at the end of its line:
+
+```markdown
+- [ ] Email Daisy the pricing question #quick
+- [ ] Draft the market-sizing memo #focus
+- [ ] Something in between
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `task_data.effort_tag` | string \| null | `quick` / `focus` from a trailing `#quick` / `#focus` (case-insensitive); stripped from `task_data.text` |
+| `task_data.effort` | string \| null | `effort_tag`, else the enclosing section's `**Effort:**`, else null |
+
+- `quick` ≈ 3 minutes; `focus` ≥ 1 hour; null = in between or unknown (a deliberate state, not missing data).
+- The section default applies only to tasks directly under that heading; it does not cascade into sub-headings.
+- Only whole-word `#quick` / `#focus` match — `#quickstart` is ordinary text.
+
+```sql
+SELECT text, section FROM "todo.md"::task_list
+WHERE completed = false AND effort = 'quick';
+```
+
+First consumer: the MDQL Todo iOS app (segmented Any / Quick / Focus / Untagged filter; swipe a row to retag).
 
 ---
 
